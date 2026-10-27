@@ -1,0 +1,24 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>Pixel Museum</title>
+<meta name="description" content="An explorable pixel art museum.">
+<meta name="theme-color" content="#07040c">
+<link rel="icon" href="favicon.png" type="image/png">
+<style>
+html,body{margin:0;height:100%;background:#07040c;overflow:hidden;overscroll-behavior:none}
+canvas{position:fixed;left:0;top:0;image-rendering:pixelated;image-rendering:crisp-edges;touch-action:none;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;outline:none}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+</style></head><body>
+<canvas id="c" tabindex="0" aria-label="Pixel Museum. Click or tap things to interact, drag or use the arrow keys to walk, Tab to move between exhibits, Enter to use, Escape to go back."></canvas>
+<p id="live" class="sr" aria-live="polite"></p>
+<script src="js/planets.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/entrance.js"></script>
+<script src="js/hall.js"></script>
+<script src="js/meta.js"></script>
+<script src="js/rooms-landry.js"></script><script src="js/rooms-landry2.js"></script>
+<script src="js/rooms-legends.js"></script>
+<script src="js/rooms-east.js"></script>
+<script src="js/rooms-east2.js"></script>
+<script>M.start('entrance')</script>
+</body></html>
