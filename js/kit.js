@@ -105,7 +105,7 @@ K.morph=(R,o)=>{const F=o.F,w=F[0].w,h=F[0].h,dur=o.dur||1.4,ar=o.ar||3;
 K.rig=(R,o)=>{const P=o.parts,w=o.w,h=o.h,dur=o.dur||3;
  const e=M.ent(R,{ex:1,x:Math.round(o.x-w/2),y:o.yb-h,w,h,box:1,k:0,st:0,z:o.z??o.yb,last:0,busy:0,pu:P.map(()=>0),
   name:o.pname?(ee=>ee.st>=2?o.pname:o.name):o.name,
-  draw(g,X,Y,t,e,sel){const k=e.k;o.under&&o.under(g,X,Y,t,e,k);
+  draw(g,X,Y,t,e,sel){const k=e.k;o.under&&o.under(g,X,Y,t,e,k);Y+=Math.round(e.oy||0);
    const L=P.map((q,i)=>{const u=clamp((k-q.t[0])/(q.t[1]-q.t[0]),0,1),eu=M.ease.io(u);return{q,u,eu,z:u<.5?(q.za??i):(q.zb??q.za??i)}}).sort((a,b)=>a.z-b.z);
    for(const{q,u,eu}of L){if(q.hide0&&u<=0||q.hide1&&u>=1)continue;const px=lerp(q.a[0],q.b[0],eu),py=lerp(q.a[1],q.b[1],eu)-(q.arc?Math.sin(u*Math.PI)*q.arc:0);
     let s=q.s,sc=1;if(Array.isArray(q.s)){const c=Math.cos(clamp(u*1.0,0,1)*Math.PI);s=c>=0?q.s[0]:q.s[1];sc=Math.max(.12,Math.abs(c));if(u<=0)sc=1,s=q.s[0];if(u>=1)sc=1,s=q.s[1]}
