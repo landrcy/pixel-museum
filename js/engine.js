@@ -254,9 +254,20 @@ function dmask(k){if(!DM){DM=[];for(let i=0;i<=16;i++){const c=document.createEl
 function iris(cx,cy,r){g.fillStyle='#07040c';const E=5;for(let y=0;y<BH;y++){const dy=y+.5-cy;const inner=r-E,outer=r+E;if(Math.abs(dy)>=outer){g.fillRect(0,y,BW,1);continue}
   const xo=Math.sqrt(outer*outer-dy*dy),xi=Math.abs(dy)<inner?Math.sqrt(inner*inner-dy*dy):0;g.fillRect(0,y,Math.max(0,Math.floor(cx-xo)),1);g.fillRect(Math.ceil(cx+xo),y,BW,1);
   for(let x=Math.floor(cx-xo);x<Math.ceil(cx+xo);x++){if(xi&&x>cx-xi&&x<cx+xi-1)continue;const d=Math.hypot(x+.5-cx,dy);if((d-inner)/(2*E)>bay(x,y))g.fillRect(x,y,1,1)}}}
+// pixel-art cover wipes; k = 0 (clear) .. 1 (fully covered). Everything is 1-texel aligned.
+function cover(st,k,cx,cy,col,ph){const D='#07040c';g.fillStyle=D;if(k>=1){g.fillRect(0,0,BW,BH);return}if(k<=0)return;
+ if(st==='blocks'||st==='diamond'){const C=12,maxD=Math.hypot(Math.max(cx,BW-cx),Math.max(cy,BH-cy))+C;for(let by=0;by<BH;by+=C)for(let bx=0;bx<BW;bx+=C){const d=Math.hypot(bx+C/2-cx,by+C/2-cy)/maxD*.75+H(bx,by)*.25;const q=clamp((k-d*.5)/.5,0,1);const sz=Math.round(q*(st==='diamond'?C+1:C/2));if(sz<=0)continue;const mx=bx+C/2,my=by+C/2;
+   if(st==='blocks'){g.fillStyle=D;g.fillRect(mx-sz,my-sz,sz*2,sz*2);if(sz<C/2){g.fillStyle=col;g.fillRect(mx-sz,my-sz,sz*2,1);g.fillRect(mx-sz,my-sz,1,sz*2)}}
+   else{for(let j=-sz;j<sz;j++){const w=sz-Math.abs(j+.5)+.5;const wi=Math.round(w*1.0)*1;if(wi<=0)continue;g.fillStyle=D;g.fillRect(mx-wi,my+j,wi*2,1);if(sz<C+1&&q<1){g.fillStyle=col;g.fillRect(mx-wi,my+j,1,1);g.fillRect(mx+wi-1,my+j,1,1)}}}}
+   // diamond cells overlap at full size: fill fully when close to done
+   if(st==='diamond'&&k>.9){g.fillStyle=dmask(Math.round((k-.9)*10*16));g.fillRect(0,0,BW,BH)}return}
+ if(st==='melt'){const CW=4;for(let x=0;x<BW;x+=CW){const dl=H(x,7)*.35+H(x>>3,9)*.15;const q=clamp((k-dl)/(1-.5),0,1);const h=Math.round(q*q*(BH+12));if(h<=0)continue;const y0=ph==='out'?0:BH-h;g.fillStyle=D;g.fillRect(x,y0,CW,h);g.fillStyle=col;if(h<BH)g.fillRect(x,ph==='out'?h-1:y0,CW,1)}return}
+ if(st==='shutter'){const BHt=8;for(let y=0;y<BH;y+=BHt){const row=y/BHt,fromL=row%2===0;const dl=(row%5)*.04;const q=clamp((k-dl)/.8,0,1),w=Math.round(q*BW);if(w<=0)continue;const x0=fromL?0:BW-w;g.fillStyle=D;g.fillRect(x0,y,w,BHt);g.fillStyle=col;if(w<BW){const ex=fromL?w-1:x0;g.fillRect(ex,y,1,BHt);for(let j=0;j<BHt;j+=2)g.fillRect(fromL?ex+1+((j>>1)&1):ex-1-((j>>1)&1),y+j,1,1)}}return}
+ g.fillStyle=dmask(Math.round(k*16));g.fillRect(0,0,BW,BH)}
 function drawTR(){if(!TR)return;const p=clamp((M.now-TR.t0)/TR.d,0,1);const maxR=Math.hypot(BW,BH);
- if(TR.ph==='out'){if(TR.style==='iris')iris(TR.cx,TR.cy,maxR*(1-p*p)-4);else{g.fillStyle=dmask(Math.round(p*16));g.fillRect(0,0,BW,BH)}}
- else{if(TR.style==='iris')iris(TR.cx,TR.cy,maxR*p*(2-p)-4);else{g.fillStyle=dmask(Math.round((1-p)*16));g.fillRect(0,0,BW,BH)}}
+ const st=TR.style;if(st!=='iris'&&st!=='dissolve'){cover(st,TR.ph==='out'?p:1-p,TR.cx,TR.cy,TR.col||'#ffd86a',TR.ph)}
+ else if(TR.ph==='out'){if(st==='iris')iris(TR.cx,TR.cy,maxR*(1-p*p)-4);else{g.fillStyle=dmask(Math.round(p*16));g.fillRect(0,0,BW,BH)}}
+ else{if(st==='iris')iris(TR.cx,TR.cy,maxR*p*(2-p)-4);else{g.fillStyle=dmask(Math.round((1-p)*16));g.fillRect(0,0,BW,BH)}}
  if(p>=1){if(TR.ph==='out'){TR.swap();TR={...TR,ph:'in',t0:M.now,d:TR.din,cx:BW/2,cy:BH/2}}else TR=null}}
 M.busy=()=>!!TR;
 const LIVE=document.getElementById('live');
@@ -265,8 +276,8 @@ function enter(id,o){const R=M.room(id);cur=R;R.hover=null;R.focus=null;R.dlg=nu
  R.def.enter&&R.def.enter(R,o);if(LIVE)LIVE.textContent=R.name;document.title=(R.def.wing?R.name+' · ':'')+M.NAME}
 // go to a scene. o: {from:[sx,sy] screen point, style:'iris'|'dissolve', at: x to centre on, pop}
 M.go=(id,o={})=>{if(TR||!M.defs[id])return;const doIt=()=>{enter(id,o);if(!o.pop){const h=id==='entrance'?' ':'#'+id;try{history.pushState({id},'',h==' '?location.pathname+location.search:h)}catch(e){}}};
- if(!cur||o.instant){doIt();return}const f=o.from||[BW/2,BH/2];TR={ph:'out',t0:M.now,d:RM?.12:(o.dout||.55),din:RM?.12:(o.din||.5),style:RM?'dissolve':(o.style||'iris'),cx:f[0],cy:f[1],swap:doIt}};
-M.back=()=>{if(!cur)return;const b=cur.def.backTo;if(!b)return;M.snd('swish',.8);const R=cur;M.go(b,{style:'iris',at:M.backAt?M.backAt(R.id):undefined,from:[BW/2,BH/2],ret:R.id})};
+ if(!cur||o.instant){doIt();return}const f=o.from||[BW/2,BH/2];TR={ph:'out',t0:M.now,d:RM?.12:(o.dout||.55),din:RM?.12:(o.din||.5),style:RM?'dissolve':(o.style||'iris'),col:o.col,cx:f[0],cy:f[1],swap:doIt}};
+M.back=()=>{if(!cur)return;const b=cur.def.backTo;if(!b)return;M.snd('swish',.8);const R=cur;M.go(b,{style:'shutter',col:'#ffd86a',at:M.backAt?M.backAt(R.id):undefined,from:[BW/2,BH/2],ret:R.id})};
 /* ---------------- input ---------------- */
 let ptr=null,lastMove=0;M.uiHover=null;M.touch=false;
 const toTex=ev=>{const r=cv.getBoundingClientRect();return[(ev.clientX-r.left)/S,(ev.clientY-r.top)/S]};

@@ -122,7 +122,7 @@ M.def('hall',{name:'LOBBY',w:W,start:CX,top:'#140c1c',bot:'#1a0e10',backTo:'entr
      if(o<=0){g.drawImage(A.full.c,X,Y);if(plc&&(!RM||!e.pp)){if(!e.pn||M.now>e.pn){window.PLANETS[d.door.planet.paint](plc,RM?7:M.now+i,d.door.planet.arg?d.door.planet.arg(e,sel):undefined);e.pn=M.now+.09;e.pp=1}const q=d.door.planet;g.drawImage(plc.c,X+24-Math.floor(q.w/2),Y+30-Math.floor((q.h||q.w)/2)+(A.st==='flip'?20:0))}}
      else{g.drawImage(A.inside.c,X,Y);if(A.st==='slide'){const sh=Math.round(o*70);g.drawImage(A.leaf.c,0,sh,48,80-sh,X,Y,48,80-sh)}else{const lw=Math.max(2,Math.round(34*(1-o*.92)));const LF=ramp(d.door.leaf||'#5e3420',6);for(let yy=0;yy<80;yy++)for(let xx=0;xx<lw;xx++){const ax=7+xx,ay=yy;if(!A.inLeaf(ax,A.st==='flip'?79-ay:ay))continue;g.fillStyle=rp(LF,.45-o*.25+(xx===0?.2:xx===lw-1?-.2:0),ax,ay);g.fillRect(X+ax,Y+ay,1,1)}}g.drawImage(A.frame.c,X,Y)}},
     click(e,R){if(e.open||M.busy())return;e.opening=1;M.snd(A.st==='slide'?'zap':'creak',A.st==='slide'?.5:1.1);M.snd('open',1+i*.02)},
-    upd(e,dt,t,R){if(e.opening){e.open=Math.min(1,e.open+dt*(RM?8:2.2));if(e.open>.35&&!e.sp){e.sp=1;M.emit(R,d.door.fx||'star',e.x+24,e.y+44,16,{rx:20,ry:30})}if(e.open>=1&&!M.busy()){e.opening=0;const[ox,oy]=M.view(R);M.go(id,{from:[e.x+24+ox,e.y+44+oy],style:'iris',dout:.55})}}
+    upd(e,dt,t,R){if(e.opening){e.open=Math.min(1,e.open+dt*(RM?8:2.2));if(e.open>.35&&!e.sp){e.sp=1;M.emit(R,d.door.fx||'star',e.x+24,e.y+44,16,{rx:20,ry:30})}if(e.open>=1&&!M.busy()){e.opening=0;const[ox,oy]=M.view(R);M.go(id,M.trFor(id,[e.x+24+ox,e.y+44+oy]))}}
      else if(e.closing){e.open=Math.max(0,e.open-dt*2.5);if(e.open<=0){e.closing=0;e.sp=0;M.snd('thud',1.3)}}
      // ambient themed sparkle around visible doors
      if(!RM&&Math.random()<dt*.5){const[ox]=M.view(R);if(e.x+ox>-50&&e.x+ox<M.BW+50)M.emit(R,d.door.fx||'star',e.x+8+Math.random()*32,e.y+20+Math.random()*50,1)}}});
@@ -162,6 +162,8 @@ M.def('hall',{name:'LOBBY',w:W,start:CX,top:'#140c1c',bot:'#1a0e10',backTo:'entr
   for(let i=0;i<30;i++){const k=(t*.05+i*.618)%1,x=CX-60+((i*53)%120)+Math.sin(t*.5+i)*4,y=60+k*130;if(bay(x|0,y|0)<.5){g.fillStyle=i%3?'#fff0c8':'#ffffff';g.fillRect(Math.round(x+ox),Math.round(y+oy),1,1)}}},
  upd(R,dt,t){},
  over(R,g,t){if(R.dlg)drawDlg(R,g,t)}});
+// each room gets its own pixel transition + accent colour
+M.trFor=(id,from)=>{const ST=['blocks','diamond','melt','shutter','iris'];const i=Math.max(0,M.order.indexOf(id));const d=M.defs[id]||{};const col=(d.door&&d.door.light)||'#ffd86a';return{from,style:d.tr||ST[i%ST.length],col,dout:.6,din:.55}};
 /* ---------- the wing dialogue ---------- */
 function openDlg(R){if(R.dlg)return;R.dlg={t0:M.now,wing:R.lastWing||'W',sel:0,page:0,done:false,typ:0};R.att.wave=0;M.snd('blip',1.1);M.centerOn(R,CX)}
 function closeDlg(R){R.dlg=null;R.dlgItems=null;M.snd('blip',.8)}
@@ -185,7 +187,7 @@ function drawDlg(R,g,t){const D=R.dlg,Lx=layout(R),{bw,bh,bx,by,cols,rows,per}=L
  const fy=by+bh-13;if(pages>1){const pl='< '+(D.page+1)+'/'+pages+' >',T=M.txt(pl,'#e8dcc8',null);g.drawImage(T.c,bx+8,fy+2);items.push({id:'pp',x:bx+6,y:fy,w:14,h:11,act:()=>{D.page=(D.page-1+pages)%pages;M.snd('tick')}});items.push({id:'pn',x:bx+T.w-4,y:fy,w:16,h:11,act:()=>{D.page=(D.page+1)%pages;M.snd('tick')}})}
  const cl=bw<200?'BYE':'JUST LOOKING',CT=M.txt(cl,R.dlgHov==='x'?'#ffe08a':'#b8a8c8',null);g.drawImage(CT.c,bx+bw-CT.w-8,fy+2);items.push({id:'x',x:bx+bw-CT.w-10,y:fy,w:CT.w+4,h:11,act:()=>closeDlg(R)});
  R.dlgItems=items}
-function pick(R,id){const d=M.defs[id];R.dlg=null;R.dlgItems=null;R.att.wave=M.now+1;M.say(R,CX,R.att.y-2,'THIS WAY!',1);M.snd('chime');const[ox,oy]=M.view(R);M.emit(R,'star',CX,R.att.y+10,10);setTimeout(()=>M.go(id,{from:[CX+ox,R.att.y+16+oy],style:'iris',dout:.6}),550)}
+function pick(R,id){const d=M.defs[id];R.dlg=null;R.dlgItems=null;R.att.wave=M.now+1;M.say(R,CX,R.att.y-2,'THIS WAY!',1);M.snd('chime');const[ox,oy]=M.view(R);M.emit(R,'star',CX,R.att.y+10,10);setTimeout(()=>M.go(id,M.trFor(id,[CX+ox,R.att.y+16+oy])),550)}
 const itemAt=(R,x,y)=>(R.dlgItems||[]).find(u=>x>=u.x&&y>=u.y&&x<u.x+u.w&&y<u.y+u.h);
 const hallDef=M.defs.hall;
 hallDef.init=(orig=>R=>{orig(R);
