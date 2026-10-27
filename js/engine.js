@@ -286,7 +286,7 @@ function hoverAt(x,y){const R=cur;if(!R)return;const u=uiAt(x,y);M.uiHover=u?u.i
  if(e!==R.hover){R.hover=e;if(e&&e.click&&e.tick!==false)M.snd('tick',1+(e.x%7)/20)}cv.style.cursor=(u||(e&&e.click)||(R.dlg&&R.dlgHit&&R.dlgHit(x,y)))?'pointer':(ptr&&ptr.drag?'grabbing':'grab')}
 cv.addEventListener('pointerdown',ev=>{M.unlock();M.touch=ev.pointerType!=='mouse';const[x,y]=toTex(ev);ptr={id:ev.pointerId,x0:x,y0:y,x,y,drag:false,t:performance.now(),vx:0};try{cv.setPointerCapture(ev.pointerId)}catch(e){}
  const u=uiAt(x,y);if(u&&u.hold){walk=u.hold;ptr.ui=u}else if(u)ptr.ui=u;if(cur)cur.cam.tx=null;hoverAt(x,y)});
-cv.addEventListener('pointermove',ev=>{const[x,y]=toTex(ev);if(!ptr){hoverAt(x,y);return}const R=cur;const dx=x-ptr.x,dy=y-ptr.y,now=performance.now();
+cv.addEventListener('pointermove',ev=>{const[x,y]=toTex(ev);M.ptr=[x,y];if(!ptr){hoverAt(x,y);return}const R=cur;const dx=x-ptr.x,dy=y-ptr.y,now=performance.now();
  if(!ptr.drag&&!ptr.ui&&Math.hypot(x-ptr.x0,y-ptr.y0)>(M.touch?4:3)&&!(R&&R.dlg))ptr.drag=true;
  if(ptr.drag&&R&&!TR){R.cam.x-=dx;R.cam.y-=dy;const dtm=Math.max(1,now-ptr.t);ptr.vx=lerp(ptr.vx,-dx/dtm*1000,.5);ptr.vy=lerp(ptr.vy||0,-dy/dtm*1000,.5);clampCam(R)}ptr.x=x;ptr.y=y;ptr.t=now;if(!M.touch)hoverAt(x,y)});
 function up(ev){if(!ptr)return;const[x,y]=toTex(ev);const R=cur;walk=0;
