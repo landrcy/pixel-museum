@@ -82,11 +82,11 @@ function bg(p){
     if(y>=226&&y<258){const e=y===226||y===257,g2=y===228||y===255;c=e?'#140c1c':g2?rp(GOLD,.6,x,y):rp(x<L0?['#0e2a2e','#174048','#22585e','#3a7a7a']:['#3a0a14','#5a1420','#7a1e2c','#a0324a'],.45+((((x>>2)+(y>>1))&3)===0?.2:0)+(y-226)/80,x,y)}}
    p.px(x,y,c)}}
  // lobby: arched grand window, banner, desk
- const SKW=['#0b0820','#1a1240','#2e1a58','#4a2462','#7a3466','#b84e60','#e8805a'];
+ const SKW=['#3a6ab8','#4a7cc4','#5a8ed0','#6aa0da','#7cb2e2','#a8d2ee','#dcecf0'];
  for(let y=30;y<152;y++)for(let x=CX-66;x<=CX+66;x++){const dx=x+.5-CX,dy=y+.5-96,out=y<96?dx*dx+dy*dy<=66*66:Math.abs(dx)<=66,inn=y<96?dx*dx+dy*dy<=60*60:Math.abs(dx)<=60;if(!out)continue;
   if(!inn){p.px(x,y,rp(GOLD,.45+(dx<0?.25:-.1)+(y<96&&dy*dy+dx*dx>63*63?.2:0),x,y));continue}
-  let c=rp(SKW,(y-36)/116+(vn(x/20,y/10)-.5)*.1,x,y);const mh=140-10*vn(x/25,3)-4*vn(x/9,1);if(y>mh)c=rp(['#140c24','#1e1434','#2a1a40'],.3+(y-mh)/30,x,y);
-  const md=Math.hypot(x-(CX-30),y-62);if(md<9)c=rp(['#8a7aa0','#d8cce0','#fff4dc','#fffcf2'],.9-md/14+((x-(CX-30))+(y-62))*-.02,x,y);
+  let c=rp(SKW,(y-36)/116+(vn(x/20,y/10)-.5)*.1,x,y);const mh=140-10*vn(x/25,3)-4*vn(x/9,1);if(y>mh)c=rp(['#647e9c','#6e88a6','#7894b2'],.3+(y-mh)/30,x,y);
+  const md=Math.hypot(x-(CX-30),y-62);if(md<9)c=rp(['#ffe8a0','#fff4c8','#fffce8','#ffffff'],.9-md/14+((x-(CX-30))+(y-62))*-.02,x,y);
   const ang=Math.atan2(dy,dx),r=Math.hypot(dx,dy);if(Math.abs(dx)<1||y===96||y===97||(y<96&&Math.abs(r-34)<.6)||(y<96&&Math.abs(((ang/Math.PI*6)%1+1)%1-.5)>.47&&r>34))c='#3a2c34';if(Math.abs(Math.abs(dx)-30)<.6&&y>96)c='#3a2c34';
   p.px(x,y,c)}
  p.rect(CX-68,150,136,3,GOLD,{v:.6});
@@ -158,7 +158,7 @@ M.def('hall',{name:'LOBBY',w:W,start:CX,top:'#140c1c',bot:'#1a0e10',backTo:'entr
  enter(R,o){if(o.ret&&R.doors&&R.doors[o.ret]){const d=R.doors[o.ret];d.open=1;d.opening=0;d.closing=1;d.sp=0}else if(R.doors)for(const k in R.doors){R.doors[k].open=0;R.doors[k].opening=0;R.doors[k].sp=0}
   if(!o.ret&&!o.at&&!o.pop){M.centerOn(R,CX,true);setTimeout(()=>{if(M.cur()===R&&!R.greeted){R.greeted=1;R.att.wave=M.now+1.2;M.say(R,CX,R.att.y-2,'WELCOME!',1.6)}},700)}},
  sky(){},
- back(R,g,ox,oy,t){if(RM)return;for(let i=0;i<26;i++){const x=CX-56+(i*37)%112,y=40+(i*29)%60;if((x-CX)**2+(y-96)**2>56*56||Math.abs(x-CX)<2)continue;if(Math.sin(t*(1+i%3)+i)>.6){g.fillStyle='#ffffff';g.fillRect(x+ox,y+oy,1,1)}}// god rays from the window
+ back(R,g,ox,oy,t){if(RM)return;// god rays from the window
   for(let i=0;i<30;i++){const k=(t*.05+i*.618)%1,x=CX-60+((i*53)%120)+Math.sin(t*.5+i)*4,y=60+k*130;if(bay(x|0,y|0)<.5){g.fillStyle=i%3?'#fff0c8':'#ffffff';g.fillRect(Math.round(x+ox),Math.round(y+oy),1,1)}}},
  upd(R,dt,t){},
  over(R,g,t){if(R.dlg)drawDlg(R,g,t)}});
