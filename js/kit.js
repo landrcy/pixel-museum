@@ -135,3 +135,5 @@ K.brazier=(R,x,yb,cols,o={})=>{const pl=o.pole||0,bowl=M.mk(14,9+pl,p=>{p.poly([
 K.portalSign=(R,x,yb,label,url,cols,name)=>{const W=M.tw(label)+14;const sp=M.mk(W,16,p=>{p.rrect(0,0,W,16,3,PAL.slate,{v:.45,bv:.25});p.rect(2,2,W-4,12,PAL.basalt,{v:.35,bv:-.15});M.ftext(p,label,7,4,cols[1],cols[0])});
  return M.ent(R,{name:name||'VISIT THE SITE',x:Math.round(x-W/2),y:yb-16,spr:sp,z:yb,react:'jiggle',draw(g,X,Y,t,e,sel){M.glow(g,X+W/2,Y+8,W/2+4,cols[0],.25+.1*Math.sin(t*3));if(sel)g.drawImage(M.ring(sp),X-1,Y-1);g.drawImage(sp.c,X,Y)},click(e,R){M.react(R,e);M.snd('chime');M.emit(R,'rune',e.x+W/2,e.y,12,{c:cols});setTimeout(()=>K.open(url),220)}})};
 })();
+/* cached horizontally-mirrored canvas of a sprite */
+(()=>{const FC=new WeakMap();M.flipC=s=>{let c=FC.get(s);if(!c){c=document.createElement('canvas');c.width=s.w;c.height=s.h;const x=c.getContext('2d');x.translate(s.w,0);x.scale(-1,1);x.drawImage(s.c,0,0);FC.set(s,c)}return c}})();

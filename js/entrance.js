@@ -108,7 +108,7 @@ M.def('entrance',{name:'PIXEL MUSEUM',w:W,top:'#05040c',bot:'#08080c',start:CX,
     if(sel)g.drawImage(M.ring(IDOL),X-1,y-1);g.drawImage(IDOL.c,X,y);
     const pr=M.now<e.up?40:6,pa=tt*pr;g.drawImage(BEANIE.c,X+7,y-8);const pl=Math.round(Math.cos(pa)*11);g.fillStyle='#ffd23a';g.fillRect(X+22-Math.abs(pl),y-10,Math.abs(pl)*2+1,1);g.fillStyle='#e83a3a';g.fillRect(X+22+(pl<0?pl:0),y-10,Math.abs(pl)/2|0,1);g.fillStyle='#ffffff';g.fillRect(X+22,y-11,1,2);
     // googly eyes
-    const[vx,vy]=M.view(R);const px=M.ptr?M.ptr[0]-vx:CX,py=M.ptr?M.ptr[1]-vy:200;
+    const px=M.ptr?M.ptr[0]:X+22,py=M.ptr?M.ptr[1]:y+80;
     for(const ex of[12,32]){const cx=X+ex,cy=y+12;g.fillStyle='#140c1c';g.fillRect(cx-5,cy-4,11,9);g.fillRect(cx-4,cy-5,9,11);g.fillStyle='#ffffff';g.fillRect(cx-4,cy-3,9,7);g.fillRect(cx-3,cy-4,7,9);
      let a=Math.atan2(py-cy,px-cx);if(e.spin>M.now)a=M.now*25*(ex>20?1:-1);const q=Math.round(cx+Math.cos(a)*2.5),r=Math.round(cy+Math.sin(a)*2.5+(RM?0:.4));g.fillStyle='#140c1c';g.fillRect(q-1,r-1,3,3)}
     if(M.now<e.up&&!RM){g.fillStyle='#a8fff8';for(let i=0;i<6;i++)g.fillRect(X+8+((tt*60+i*7)|0)%30,y-12+(i%3),1,1)}},
