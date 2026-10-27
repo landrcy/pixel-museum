@@ -89,7 +89,7 @@ const px=(g,x,y,c,w=1,h=1)=>{g.fillStyle=c;g.fillRect(Math.round(x),Math.round(y
     upd(e,dt,t){const tt=RM?0:t,spin=M.now-e.sp<1;e.x=Math.round(e.bx+Math.sin(tt*.4+i)*30);e.y=Math.round(36+Math.sin(tt*.9+i*2)*8-(spin?Math.sin((M.now-e.sp)*Math.PI)*12:0))},
     click(e,R){e.ci=(e.ci+1)%4;e.sp=M.now;M.snd('servo',1.6);M.emit(R,'spark',e.x+5,e.y+14,6,{c:[LC[e.ci][3],'#ffffff']})}});
    // ---------- vending machine ----------
-   M.ent(R,{name:'SHRINE VENDING MACHINE',x:960,y:FL-40,w:24,h:40,box:1,z:FL,dr:-9,
+   M.ent(R,{name:'SHRINE VENDOR',x:960,y:FL-40,w:24,h:40,box:1,z:FL,dr:-9,
     draw(g,X,Y,t,e,sel){const tt=RM?0:t;g.fillStyle='#e8e8f0';g.fillRect(X,Y,24,40);g.fillStyle='#1a1a2a';g.fillRect(X+2,Y+2,20,22);glowAt(g,X+12,Y+12,14,NC[3],.3);
      for(let r=0;r<3;r++)for(let c=0;c<4;c++)px(g,X+4+c*5,Y+4+r*7,[NP[3],NC[3],'#ffd040','#7aff7a'][(c+r)%4],3,5);g.fillStyle='#05050a';g.fillRect(X+4,Y+30,16,6);
      const a=M.now-e.dr;if(a<1.5){px(g,X+10,Y+31,NP[3],4,4)}if(((tt*2)|0)%2)px(g,X+20,Y+27,'#ff3a3a',2,1);if(sel){g.fillStyle='#fff6c4';g.fillRect(X,Y-2,24,1)}},

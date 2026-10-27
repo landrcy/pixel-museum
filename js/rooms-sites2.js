@@ -10,7 +10,7 @@
    p.poly([[400,30],[400,110],[470,70]],['#2a0a10','#3a121a','#4a1a22'],{v:.5,bv:.3});
    K.floor(p,FL,M.RH,['#140608','#2a0e12','#3e161c','#5a2028','#7a3038'],{v:.3,inlay:(x,y)=>(x%60<2&&y>FL+3)?'#8a141e':0})},
   init(R){
-   K.planet(R,{paint:'yt',w:52,x:450,y:70,name:'THE ETERNAL PLAY BUTTON',z:-10,e:{cl:-9,pre(g,X,Y,t,e){glowAt(g,X+26,Y+26,40,'#ff3a3a',.22+.1*Math.sin(t*2))},
+   K.planet(R,{paint:'yt',w:52,x:450,y:70,name:'ETERNAL PLAY BUTTON',z:-10,e:{cl:-9,pre(g,X,Y,t,e){glowAt(g,X+26,Y+26,40,'#ff3a3a',.22+.1*Math.sin(t*2))},
     click(e,R){e.cl=M.now;M.snd('tada',1);M.emit(R,'confetti',450,70,30,{v:1.6});M.say(R,450,36,K.pick(['LIKE AND SUBSCRIBE!','SMASH THAT BELL','+1,000,000 VIEWS']),1.4)}}});
    // five CRT monoliths, one per channel (moon on screen); click -> static then the channel's moon; sign below links out
    CH.forEach(([nm,kind,url],i)=>{const x=110+i*170-(i>2?40:0);const cx=i<2?110+i*130:i===2?560:i===3?700:820;const mx=[95,215,560,700,800][i];

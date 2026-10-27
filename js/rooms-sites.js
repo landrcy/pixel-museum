@@ -22,7 +22,7 @@ const S=K.S={glowAt,px,sel1};
    for(const b of BOD){const n=Math.round(b[2]*5);for(let k=0;k<n;k+=4){const a=k/n*TAU;p.px(SX+Math.cos(a)*b[2],SY+Math.sin(a)*b[2]*.24,Math.sin(a)>0?'#3a3470':'#221e48')}}
    K.floor(p,FL,M.RH,PAL.slate,{v:.3,inlay:(x,y)=>{const d=Math.hypot((x-SX)/2.2,(y-FL-18)*1.6);return Math.abs(d-40)<.7||Math.abs(d-70)<.7?(H(x,y)>.5?BR[3]:BR[2]):0}})},
   init(R){
-   const sun=K.planet(R,{paint:'sun',w:80,x:SX,y:SY,name:'THE SUN (LANDRCYVERSE)',z:-10,dt:.06,arg:e=>({ign:1,fl:e?1+e.flare:1,L:e?Math.floor(e.Lr*8)/8:1}),
+   const sun=K.planet(R,{paint:'sun',w:80,x:SX,y:SY,name:'LANDRCYVERSE SUN',z:-10,dt:.06,arg:e=>({ign:1,fl:e?1+e.flare:1,L:e?Math.floor(e.Lr*8)/8:1}),
     e:{flare:0,Lr:1,upd(e,dt){e.flare=Math.max(0,e.flare-dt*.9);if(e.Lr<1)e.Lr=Math.min(1,e.Lr+dt*.8)},
      click(e,R){e.flare=1.6;e.Lr=0;M.snd('charge',.6);M.snd('rumble',1.3);M.emit(R,'fire',SX,SY,26,{v:2.4});M.flash(R,'#fff0c0',.12);M.say(R,SX,SY-46,'SOLAR FLARE! THE L REWRITES ITSELF',1.6)}}});
    BOD.forEach((b,i)=>{const e=K.planet(R,{paint:b[0],w:b[1],h:b[4],x:SX,y:SY,name:b[3],dt:.08,arg:b[0]==='ashaad'?(e,s)=>({open:e&&M.now<e.bT?1:0}):undefined,
@@ -168,7 +168,7 @@ const S=K.S={glowAt,px,sel1};
    for(let y=FL;y<M.RH;y++)for(let x=CX-90;x<CX+90;x++){const d=Math.hypot((x-CX)/2.4,(y-FL-14)*1.4);if(Math.abs(d-34)<.6||Math.abs(d-28)<.6)p.px(x,y,'#6a1a0a')}
    for(let i=0;i<5;i++){const a=i/5*TAU-Math.PI/2,b=(i+2)/5*TAU-Math.PI/2;p.line(CX+Math.cos(a)*28*2.4,FL+14+Math.sin(a)*28/1.4,CX+Math.cos(b)*28*2.4,FL+14+Math.sin(b)*28/1.4,'#4a120a')}},
   init(R){
-   const ash=K.planet(R,{paint:'ashaad',w:84,h:76,x:CX,y:76,name:'THE BOUND ONE (ASHAAD)',z:-10,arg:e=>({open:e?e.op:0}),
+   const ash=K.planet(R,{paint:'ashaad',w:84,h:76,x:CX,y:76,name:'ASHAAD, BOUND',z:-10,arg:e=>({open:e?e.op:0}),
     e:{op:0,bn:-9,upd(e,dt){const on=M.now-e.bn<3.5;e.op=clamp(e.op+(on?1:-1)*dt*1.5,0,1)},
      pre(g,X,Y,t,e){const on=M.now-e.bn<3.5;const cx=X+42,cy=Y+38;// chains to the corners
       for(const[ax,ay]of[[-120,-60],[120,-60],[-120,80],[120,80]]){const n=24;for(let i=0;i<n;i++){const u=i/n,jg=on?Math.sin(t*30+i)*2:Math.sin(t+i*.3)*.5;const x=cx+ax*u+jg,y=cy+ay*u+Math.sin(u*Math.PI)*8;px(g,x-1,y-1,i%2?'#4a4048':'#7a7078',i%2?2:3,2)}}
